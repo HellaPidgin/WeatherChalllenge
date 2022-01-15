@@ -170,6 +170,24 @@ export default function index() {
             json.daily[currentPageIndex].temp.night,
           ])
         );
+        setMaximum(
+          calculateMaximum([
+            json.daily[0].temp.max,
+            json.daily[1].temp.max,
+            json.daily[2].temp.max,
+            json.daily[3].temp.max,
+            json.daily[4].temp.max,
+          ])
+        );
+        setMinimum(
+          calculateMinimum([
+            json.daily[0].temp.min,
+            json.daily[1].temp.min,
+            json.daily[2].temp.min,
+            json.daily[3].temp.min,
+            json.daily[4].temp.min,
+          ])
+        );
       })
       .catch((error) => {
         console.error(error);
