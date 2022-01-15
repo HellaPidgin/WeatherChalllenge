@@ -29,6 +29,12 @@ const CityTitleContainer = styled.View`
   width: 80%;
   padding: 10px;
 `;
+
+const CityTitleText = styled.Text`
+  font-size: 15px;
+  color: ${colors.Eggshell};
+`;
+
 const Weather5dayBox = styled.View`
   border-color: ${colors.Eggshell};
   width: 80%;
@@ -144,7 +150,7 @@ export default function index() {
   // Set grid #1 state from OpenWeather API.
   const fetchWeatherByCity = (city: LocationType) => {
     fetch(
-      `https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&exclude=hourly,minutely&appid=${API_KEY}`
+      `https://api.openweathermap.org/data/2.5/onecall?lat=${locations[currentCityIndex].latitude}&lon=-${locations[currentCityIndex].longitude}&exclude=hourly,minutely&appid=${API_KEY}`
     )
       .then((response) => response.json())
       .then((json) => {
@@ -196,7 +202,7 @@ export default function index() {
 
   useEffect(() => {
     fetchWeatherByCity(locations[0]);
-  }, [currentPageIndex]);
+  }, [currentPageIndex, currentCityIndex]);
 
   // Calculate next day dependencies
   const nextDay = () => {
@@ -211,6 +217,11 @@ export default function index() {
     <Container>
       <ContainerWhiteSpace />
       <WeatherPanel>
+        <CityTitleContainer>
+          <CityTitleText>
+            {locations[currentCityIndex].name}
+          </CityTitleText>
+        </CityTitleContainer>
         <Weather5dayBox>
           <Weather5dayRow>
             <WeatherRowTitle>Morning Temperature</WeatherRowTitle>
