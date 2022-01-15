@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
 import styled from "styled-components/native";
+
+// Utility dependencies.
 import { API_KEY } from "../utils/api";
 import { colors } from "../utils/colors";
+import { locations, LocationType } from "../utils/locations";
 
 // React Native Styled Component Dependencies
 const BORDER_RADIUS_VALUE = "20px";
@@ -21,6 +23,11 @@ const WeatherPanel = styled.View`
   background-color: ${colors.Independence};
   justify-content: center;
   align-items: center;
+`;
+const CityTitleContainer = styled.View`
+  justify-content: center;
+  width: 80%;
+  padding: 10px;
 `;
 const Weather5dayBox = styled.View`
   border-color: ${colors.Eggshell};
@@ -82,24 +89,87 @@ export default function index() {
   // State dependencies for the second gird.
   const [maximum, setMaximum] = useState<number>(0);
   const [minimum, setMinimum] = useState<number>(0);
-  const [mean, setMean] = useState<number>(0);
-  const [mode, setMode] = useState<number>(0);
+  const [mean, setMean] = useState<number | string>(0);
+  const [mode, setMode] = useState<number | undefined>(0);
   // State dependencies for Page Change
+  const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
+  // State dependency for City name & location
+  const [currentCityIndex, setCurrentCityIndex] = useState<number>(0);
 
   // PAGE FUNCTIONS SECTION
 
+  // Calculate the Minimum value
+  const calculateMinimum = (value: number[]) => {
+    var lowestNumber = value[0];
+    for (var i = 0; i < value.length; i++) {
+      if (value[i] < lowestNumber) {
+        lowestNumber = value[i];
+      }
+    }
+    return lowestNumber;
+  };
+  // Calculate the Maximum value
+  const calculateMaximum = (value: number[]) => {
+    var highestNumber = value[0];
+    for (var i = 0; i < value.length; i++) {
+      if (value[i] > highestNumber) {
+        highestNumber = value[i];
+      }
+    }
+    return highestNumber;
+  };
+  // Calculate the Mean value
+  const calculateMean = (value: number[]) => {
+    var total = 0;
+    for (var i = 0; i < value.length; i++) {
+      total += value[i];
+    }
+    return (total / value.length).toFixed(2);
+  }
+  // Calculate the Mode value
+  const calculateMode = (value: number[]) => {
+    var numMapping: number[] = [];
+    var greatestFreq = 0;
+    var mode;
+    value.forEach(function findMode(number) {
+      numMapping[number] = (numMapping[number] || 0) + 1;
+
+      if (greatestFreq < numMapping[number]) {
+        greatestFreq = numMapping[number];
+        mode = number;
+      }
+    });
+    return mode;
+  };
   // Set grid #1 state from OpenWeather API.
-  const fetchWeatherByCity = (cityName: string) => {
+  const fetchWeatherByCity = (city: LocationType) => {
     fetch(
       `https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&exclude=hourly,minutely&appid=${API_KEY}`
     )
       .then((response) => response.json())
       .then((json) => {
-        console.log(json.daily[0].temp.day);
-        setMorningTemp(json.daily[0].temp.morn)
-        setDayTemp(json.daily[0].temp.day)
-        setNightTemp(json.daily[0].temp.night)
-        setHumidity(json.daily[0].humidity)
+        // first grid state modifications
+        setMorningTemp(json.daily[currentPageIndex].temp.morn);
+        setDayTemp(json.daily[currentPageIndex].temp.day);
+        setNightTemp(json.daily[currentPageIndex].temp.night);
+        setHumidity(json.daily[currentPageIndex].humidity);
+        // second grid state modifications
+        setMean(
+          calculateMean([
+            json.daily[currentPageIndex].temp.morn,
+            json.daily[currentPageIndex].temp.day,
+            json.daily[currentPageIndex].temp.eve,
+            json.daily[currentPageIndex].temp.night,
+          ])
+        );
+        setMode(
+          calculateMode([
+            json.daily[currentPageIndex].temp.morn,
+            json.daily[currentPageIndex].temp.day,
+            json.daily[currentPageIndex].temp.eve,
+            json.daily[currentPageIndex].temp.night,
+          ])
+        );
       })
       .catch((error) => {
         console.error(error);
@@ -107,17 +177,17 @@ export default function index() {
   };
 
   useEffect(() => {
-    fetchWeatherByCity("London");
-  }, []);
+    fetchWeatherByCity(locations[0]);
+  }, [currentPageIndex]);
 
-  // Calculate the Minimum value
-  const CalcultateMinimum = (value: number[]) => {};
-  // Calculate the Maximum value
-  const CalcultateMaximum = (value: number[]) => {};
-  // Calculate the Mean value
-  const CalcultateMean = (value: number[]) => {};
-  // Calculate the Mode value
-  const CalcultateMode = (value: number[]) => {};
+  // Calculate next day dependencies
+  const nextDay = () => {
+    if (currentPageIndex >= 4) {
+      setCurrentPageIndex(0);
+    } else {
+      setCurrentPageIndex((prev) => prev + 1);
+    }
+  };
 
   return (
     <Container>
@@ -144,27 +214,25 @@ export default function index() {
         <Weather5dayBox>
           <Weather5dayRow>
             <WeatherRowTitle>Minimum value</WeatherRowTitle>
-            <WeatherRowValue>0</WeatherRowValue>
+            <WeatherRowValue>{minimum}</WeatherRowValue>
           </Weather5dayRow>
           <Weather5dayRow>
             <WeatherRowTitle>Maximum value</WeatherRowTitle>
-            <WeatherRowValue>0</WeatherRowValue>
+            <WeatherRowValue>{maximum}</WeatherRowValue>
           </Weather5dayRow>
           <Weather5dayRow>
             <WeatherRowTitle>Mean value</WeatherRowTitle>
-            <WeatherRowValue>0</WeatherRowValue>
+            <WeatherRowValue>{mean}</WeatherRowValue>
           </Weather5dayRow>
           <Weather5dayRow>
             <WeatherRowTitle>Mode value</WeatherRowTitle>
-            <WeatherRowValue>0</WeatherRowValue>
+            <WeatherRowValue>{mode}</WeatherRowValue>
           </Weather5dayRow>
         </Weather5dayBox>
         <DayChangeRow>
-          <DayCounter>Day: 1/5</DayCounter>
-          <DayChangeButton>
-            <DayChangeButtonText>
-              NEXT DAY
-            </DayChangeButtonText>
+          <DayCounter>Day: {currentPageIndex + 1}/5</DayCounter>
+          <DayChangeButton onPress={nextDay}>
+            <DayChangeButtonText>NEXT DAY</DayChangeButtonText>
           </DayChangeButton>
         </DayChangeRow>
       </WeatherPanel>
