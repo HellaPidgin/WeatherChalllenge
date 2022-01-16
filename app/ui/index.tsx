@@ -6,6 +6,8 @@ import { API_KEY } from "../utils/api";
 import { colors } from "../utils/colors";
 import { locations, LocationType } from "../utils/locations";
 
+
+
 // React Native Styled Component Dependencies
 const BORDER_RADIUS_VALUE = "20px";
 const Container = styled.View`
@@ -201,7 +203,7 @@ export default function index() {
   };
 
   useEffect(() => {
-    fetchWeatherByCity(locations[0]);
+    //fetchWeatherByCity(locations[0]);
   }, [currentPageIndex, currentCityIndex]);
 
   // Calculate next day dependencies

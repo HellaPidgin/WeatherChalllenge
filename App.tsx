@@ -1,14 +1,11 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
 // Navigation dependencies...
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 const Stack = createNativeStackNavigator();
 
 // Stack Screen dependencies
-import UI from './app/ui'
-import { AppProvider } from './app/provider';
-
+import UI from "./app/ui";
+import { AppProvider } from "./app/provider";
 
 export default function App() {
   return (
