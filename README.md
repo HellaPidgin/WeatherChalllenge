@@ -6,16 +6,17 @@ You can run this expo project on the web or on a device (IOS or Android). If you
 2. Clone the code from this repo
 3. Enter directory `cd WeatherChallenge` and run `yarn && expo start`.
 4. Done.
+
+## To Test
+### Coverage
+Testing only covers button use for now.
+- Comment out  `fetchWeatherByCity(locations[0]);` from useEffects
+- Run `yarn test` from root directory.
 ## Data
 - Minimum: Uses the min value from all 5 days
 - Maximum: Uses the max value from all 5 days
 - Mean: Takes the mean from the morning, day, evening and night
 - Mode: Takes the mode from the morning, day, evening and night
-
-## To Test
-- Comment out  `fetchWeatherByCity(locations[0]);` from useEffects
-- Run `yarn test` from root directory.
-
 ## Alternative Data order.
 - Alternative Mean: This could have taken a larger array or weather forecasts. Instead of  morning, day, evening and night from the current day, it could have been  morning, day, evening and night from all 5 days.
 - Alternative Mode: Same as `Alternative mean`.
