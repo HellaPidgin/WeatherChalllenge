@@ -1,5 +1,11 @@
 # Sam's Open Weather App
 
+## Get Started
+You can run this expo project on the web or on a device (IOS or Android). If you're already signed into Expo, run the project [here](https://exp.host/@merciyah/WeatherChallenge)
+1. Make use you have Expo Installed. You can do so [here](https://docs.expo.dev/get-started/installation/)
+2. Clone the code from this repo
+3. Enter directory `cd WeatherChallenge` and run `yarn && expo start`.
+4. Done.
 ## Data
 - Minimum: Uses the min value from all 5 days
 - Maximum: Uses the max value from all 5 days
