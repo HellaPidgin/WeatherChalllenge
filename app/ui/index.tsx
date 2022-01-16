@@ -6,8 +6,6 @@ import { API_KEY } from "../utils/api";
 import { colors } from "../utils/colors";
 import { locations, LocationType } from "../utils/locations";
 
-
-
 // React Native Styled Component Dependencies
 const BORDER_RADIUS_VALUE = "20px";
 const Container = styled.View`
@@ -26,6 +24,40 @@ const WeatherPanel = styled.View`
   justify-content: center;
   align-items: center;
 `;
+
+const LocationButtonsContainer = styled.View`
+  align-items: flex-end;
+  width: 80%;
+`;
+
+const LocationChangeButton = styled.TouchableOpacity`
+  justify-content: center;
+  align-items: center;
+  background-color: ${colors.DeepChampagne};
+  border-radius: 10px;
+  padding: 5px;
+  margin: 2px;
+`;
+
+const LocationChangeButtonText = styled.Text`
+  font-size: 12px;
+  color: ${colors.Independence};
+`;
+const LocationChangeButtonSelected = styled.View`
+  justify-content: center;
+  align-items: center;
+  border-width: 1px;
+  border-color: ${colors.DeepChampagne};
+  border-radius: 10px;
+  padding: 5px;
+  margin: 2px;
+`;
+
+const LocationChangeButtonTextSelected = styled.Text`
+  font-size: 12px;
+  color: ${colors.Eggshell};
+`;
+
 const CityTitleContainer = styled.View`
   justify-content: center;
   width: 80%;
@@ -133,7 +165,7 @@ export default function index() {
       total += value[i];
     }
     return (total / value.length).toFixed(2);
-  }
+  };
   // Calculate the Mode value
   const calculateMode = (value: number[]) => {
     var numMapping: number[] = [];
@@ -219,10 +251,23 @@ export default function index() {
     <Container>
       <ContainerWhiteSpace />
       <WeatherPanel>
+        <LocationButtonsContainer>
+          {locations.map((data, index) => {
+            if(currentCityIndex !== index){return (
+              <LocationChangeButton onPress={() => setCurrentCityIndex(index)} key={data + index.toString()}>
+                <LocationChangeButtonText>{data.name}</LocationChangeButtonText>
+              </LocationChangeButton>
+            )}else{return (
+              <LocationChangeButtonSelected key={data + index.toString()}>
+                <LocationChangeButtonTextSelected>
+                  {data.name}
+                </LocationChangeButtonTextSelected>
+              </LocationChangeButtonSelected>
+            )};
+          })}
+        </LocationButtonsContainer>
         <CityTitleContainer>
-          <CityTitleText>
-            {locations[currentCityIndex].name}
-          </CityTitleText>
+          <CityTitleText>{locations[currentCityIndex].name}</CityTitleText>
         </CityTitleContainer>
         <Weather5dayBox>
           <Weather5dayRow>
