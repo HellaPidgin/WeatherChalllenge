@@ -26,3 +26,5 @@ Testing only covers button use for now.
 
 - Offline mode: There are various offline states for the API. This could be UI changes that reflect each of those.
 
+## Navigation & Provider
+- I've included an empty provider and a navigator with a single child for assessment purposes only.
