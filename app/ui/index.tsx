@@ -235,7 +235,7 @@ export default function index() {
   };
 
   useEffect(() => {
-    fetchWeatherByCity(locations[0]);
+    //fetchWeatherByCity(locations[0]);
   }, [currentPageIndex, currentCityIndex]);
 
   // Calculate next day dependencies

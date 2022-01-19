@@ -5,7 +5,7 @@ import { render, fireEvent } from "@testing-library/react-native";
 import App from "../ui";
 
 describe("Testing React Button Functionality", () => {
-  test("Next Day Button Exists", () => {
+  test("Next Day Button Exists", async () => {
     const component = (<App />);
 
     const { findByText} = render(component);
